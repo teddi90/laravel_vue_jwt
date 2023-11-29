@@ -1,7 +1,7 @@
 import {createRouter, createWebHistory} from 'vue-router'
 
 
-const route= createRouter({
+const route = createRouter({
     history: createWebHistory(),
     routes: [
         {
@@ -28,18 +28,20 @@ const route= createRouter({
     ],
 });
 
-route.beforeEach((to,from,next)=>{
-    const accessToken=localStorage.getItem('access_token')
-    if(to.name!=='user.login'){
-        if(!accessToken){
-            return next({
-                name:'user.login'
-            })
+route.beforeEach((to, from, next) => {
+    const accessToken = localStorage.getItem('access_token')
+
+    if (!accessToken) {
+        if (to.name === 'user.login' || to.name === 'user.registration') {
+            return next();
+        } else {
+            return  next({name:'user.login'});
         }
     }
-    if(to.name ==='user.login' && accessToken) {
+
+    if (to.name === 'user.login' || to.name === 'user.registration' && accessToken) {
         return next({
-            name:'user.personal'
+            name: 'user.personal'
         })
     }
     next();
